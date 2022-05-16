@@ -121,7 +121,6 @@ run.RM <- function(N_h,
   if (mean_hypno > 0) {
     hypno_reservoir <- list();length(hypno_reservoir) <- N_h;names(hypno_reservoir) <- hIDs
     n_hypno <- as.data.frame(matrix(0, nrow=N_h, ncol=runtime));rownames(n_hypno) <- hIDs;colnames(n_hypno) <- paste0("T",1:runtime)
-    hypno_diversity <- as.data.frame(matrix(0, nrow=N_h, ncol=runtime));rownames(hypno_diversity) <- hIDs;colnames(hypno_diversity) <- paste0("T",1:runtime)
   }
 
   # Create dataframe to store infection record
@@ -193,9 +192,6 @@ run.RM <- function(N_h,
         }
         # Record total number of hypnozoites per host
         n_hypno[,paste0("T",t)] <- sapply(hypno_reservoir, length)
-        # Record diversity of host hypnozoite reservoirs
-        hypno_diversity[,paste0("T",t)] <- sapply(hypno_reservoir, calc.Simpson.diversity)
-        hypno_diversity[,paste0("T",t)][!is.finite(hypno_diversity[,paste0("T",t)])] <- 0
       }
       # -- Step 2 - Dormant hypnozoites activate/die
       if (mean_hypno > 0) {
@@ -256,7 +252,7 @@ run.RM <- function(N_h,
   inf_record$inf_id <- rownames(inf_record)
   inf_record <- inf_record[,c("inf_id", "origin_inf","infector", "infected","start_t","end_t")]
   if (mean_hypno > 0) {
-    output <- list(call=call, model_parameters=model_params, indiv_status=indiv_status, infection_record=inf_record, hypno_reservoir=hypno_reservoir, n_hypno=n_hypno, hypno_diversity=hypno_diversity)
+    output <- list(call=call, model_parameters=model_params, indiv_status=indiv_status, infection_record=inf_record, hypno_reservoir=hypno_reservoir, n_hypno=n_hypno)
   } else {
     output <- list(call=call, model_parameters=model_params, indiv_status=indiv_status, infection_record=inf_record)
   }
